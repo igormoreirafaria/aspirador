@@ -1,10 +1,38 @@
 import random
+from random import randint
 
 class Aspirador():
     def __init__(self):
-        self.arg = arg
         self.posicao_x = randint(0, 8)
         self.posicao_y = randint(0, 8)
+
+
+    def move(self, arg):
+        if(arg == 'direita'):
+            if(self.posicao_x != 7):
+                self.posicao_x = self.posicao_x + 1
+            else:
+                print('nao e possivel se mover pra direita')
+
+        if(arg == 'baixo'):
+            if(self.posicao_y != 7):
+                self.posicao_y = self.posicao_x + 1
+            else:
+                print('nao e possivel se mover pra direita')
+
+        if(arg == 'esquerda'):
+            if(self.posicao_x != 0):
+                self.posicao_x = self.posicao_x - 1
+            else:
+                print('nao e possivel se mover pra direita')
+
+        if(arg == 'cima'):
+            if(self.posicao_y != 0):
+                self.posicao_y = self.posicao_y - 1
+            else:
+                print('nao e possivel se mover pra cima')
+
+
 
 
 class Casa():
@@ -19,7 +47,7 @@ class Casa():
 
 
 def main():
-    Aspirador()
+    aspirador = Aspirador()
 
     mapa = {}
 
@@ -28,7 +56,6 @@ def main():
         for col in range(0,8):
             mapa[row][col] = Casa()
 
-    print(mapa[0][0].limpo)
 
 
 if __name__ == '__main__':
