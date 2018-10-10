@@ -48,7 +48,7 @@ class Casa():
 
 def main():
     aspirador = Aspirador()
-
+    print "teste"
     mapa = {}
 
     for row in range(0,8):
