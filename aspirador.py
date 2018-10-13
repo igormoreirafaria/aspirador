@@ -1,62 +1,97 @@
+from random import *
 import random
-from random import randint
 
-class Aspirador():
-    def __init__(self):
-        self.posicao_x = randint(0, 8)
-        self.posicao_y = randint(0, 8)
+def move(estado_atual, sala_anterior, possiveis_movimentos):
+	
+	lista_destino = possiveis_movimentos[estado_atual[0]].copy()
 
+	lista_destino.remove(sala_anterior)
 
-    def move(self, arg):
-        if(arg == 'direita'):
-            if(self.posicao_x != 7):
-                self.posicao_x = self.posicao_x + 1
-            else:
-                print('nao e possivel se mover pra direita')
+	sala_anterior = estado_atual[0]
+	destino = random.choice(lista_destino)
+	estado_atual[0] = destino
+	return estado_atual, sala_anterior
 
-        if(arg == 'baixo'):
-            if(self.posicao_y != 7):
-                self.posicao_y = self.posicao_x + 1
-            else:
-                print('nao e possivel se mover pra direita')
+def chama_busca(estado_atual, fila, sala_anterior, possiveis_movimentos):
 
-        if(arg == 'esquerda'):
-            if(self.posicao_x != 0):
-                self.posicao_x = self.posicao_x - 1
-            else:
-                print('nao e possivel se mover pra direita')
+		
+	if( estado_atual[estado_atual[0]] == 's'):
+		estado_atual[estado_atual[0]] = 'l'
+		fila.append(estado_atual[0])
+		
+	elif(estado_atual[estado_atual[0]] == 'l'):
+		estado_atual, sala_anterior = move(estado_atual, sala_anterior, possiveis_movimentos)
 
-        if(arg == 'cima'):
-            if(self.posicao_y != 0):
-                self.posicao_y = self.posicao_y - 1
-            else:
-                print('nao e possivel se mover pra cima')
+	return estado_atual,sala_anterior
 
+def checar_objetivo(estado_atual, estados_objetivos):
+	for x in range(9):
+		if(estado_atual == estados_objetivos[x]):
+			print('objetivo alcancado')
+			return True
 
-
-
-class Casa():
-    def __init__(self):
-        self.limpo = random.choice([True, False])
-
-    def limpa(self):
-        self.limpo = False
-
-    def suja(self):
-        self.limpo = True
-
+	print('nao alcancou o objetivo')			
+	return False
 
 def main():
-    aspirador = Aspirador()
-    print "teste"
-    mapa = {}
 
-    for row in range(0,8):
-        mapa[row] = {}
-        for col in range(0,8):
-            mapa[row][col] = Casa()
+	estado_atual = [randint(1,9), random.choice(['s', 'l']), 
+								random.choice(['s', 'l']), 
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l']),
+								random.choice(['s', 'l'])]
+	fila = []
 
+	for x in range(0,10):
+		if(estado_atual[x] == 'l'):
+			fila.append(x)
+
+	estados_objetivos = { 0:[1, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'], 
+						1:[2, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						2:[3, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						3:[4, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						4:[5, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						5:[6, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						6:[7, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						7:[8, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+						8:[9, 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'] }
+
+
+	possiveis_movimentos = {1:[2,4], 2:[1,3,5], 3:[2,6], 4:[1,5,7], 
+							5:[2,4,6,8], 6:[3,5,9], 7:[4,8], 8:[5,7,9], 
+							9:[6,8]}
+
+	print(estado_atual)
+
+	sucesso = False
+	
+	i = 0
+
+	sala_anterior = random.choice(possiveis_movimentos[estado_atual[0]])
+	while(checar_objetivo(estado_atual, estados_objetivos) != True ):
+		estado_atual,sala_anterior = chama_busca(estado_atual, fila, sala_anterior, possiveis_movimentos)
+		print(estado_atual)
+		i = i + 1
+		if (i == 3):
+			chance = randint(0,100)
+			if (chance > 50):
+				estado_atual[fila[0]] = 's'
+				print(f'sujou sala {fila[0]}')
+				del fila[0]
+			elif (chance > 75):
+				estado_atual[fila[1]] = 's'
+				print(f'sujou sala {fila[0]}')
+				del fila[1]
+			elif (chance > 95):
+				estado_atual[fila[2]] = 's'
+				print(f'sujou sala {fila[0]}')
+				del fila[2]	
+			i = 0
 
 
 if __name__ == '__main__':
-    main()
+	main()
